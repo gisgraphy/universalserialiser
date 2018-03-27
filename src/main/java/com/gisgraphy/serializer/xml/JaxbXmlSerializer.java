@@ -40,6 +40,8 @@ import com.gisgraphy.serializer.common.Helper;
 import com.gisgraphy.serializer.common.SerializerException;
 
 public class JaxbXmlSerializer extends AbstractSerializer {
+    
+    JAXBContextFactory factory = JAXBContextFactory.getInstance();
 
 	private static final Logger logger = Logger.getLogger(JaxbXmlSerializer.class);
 
@@ -50,7 +52,8 @@ public class JaxbXmlSerializer extends AbstractSerializer {
 		    	if (classToBeBound == String.class){
 		    	    return (T) Helper.inputStreamToString(inputStream);
 		    	}
-			context = JAXBContext.newInstance(classToBeBound);// TODO POOL
+			//context = JAXBContext.newInstance(classToBeBound);
+		    	context = factory.getJaxBContext(classToBeBound);
 			unMarshaller = context.createUnmarshaller();
 			JAXBElement<T> objectUnmarshal = unMarshaller.unmarshal(new StreamSource(inputStream), classToBeBound);
 			return objectUnmarshal != null ? objectUnmarshal.getValue() : null;
@@ -71,7 +74,8 @@ public class JaxbXmlSerializer extends AbstractSerializer {
 		JAXBContext context = null;
 		Marshaller marshaller = null;
 		try {
-			context = JAXBContext.newInstance(object.getClass());
+			//context = JAXBContext.newInstance(object.getClass());
+		    context = factory.getJaxBContext(object.getClass());
 			marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, indent);
 			marshaller.marshal(object, outputStream);
