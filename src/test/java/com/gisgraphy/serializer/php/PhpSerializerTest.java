@@ -55,6 +55,20 @@ public class PhpSerializerTest {
 	}
 	
 	@Test
+    public void writeApostrophe() {
+        // setup
+        PhpSerializer serializer = new PhpSerializer();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        BeanForTest bean = TestUtils.createBeanForTest();
+        bean.setSampleString("saint's bay");
+        // exercice
+        serializer.write(outputStream, bean, false, null);
+        String result = new String(outputStream.toByteArray());
+        Assert.assertTrue(result.contains("saint\\'s bay"));
+        System.out.println(result);
+    }
+	
+	@Test
 	public void writeWithMethodCallback() {
 
 		// setup

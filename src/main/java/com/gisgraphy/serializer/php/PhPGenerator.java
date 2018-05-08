@@ -1235,10 +1235,15 @@ public class PhPGenerator extends JsonGeneratorBase {
 	    int ch = cbuf[offset];
 	    // note: here we know that (ch > 0x7F) will cover case of escaping
 	    // non-ASCII too:
-	    if (ch > 0x7F || escCodes[ch] != 0) {
+	    if (ch > 0x7F || escCodes[ch] != 0 ) {
 		break;
 	    }
+	    if (ch == 39) {
+	        outputBuffer[outputPtr++] = (byte) '\\';
+	        outputBuffer[outputPtr++] = (byte) ch;
+	    } else {
 	    outputBuffer[outputPtr++] = (byte) ch;
+	    }
 	    ++offset;
 	}
 	_outputTail = outputPtr;
